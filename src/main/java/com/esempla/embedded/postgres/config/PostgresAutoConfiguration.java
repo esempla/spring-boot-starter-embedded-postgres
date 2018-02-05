@@ -15,11 +15,14 @@ import org.springframework.core.annotation.Order;
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @Configuration
-@ConditionalOnProperty(prefix = "embedded.postgres", name = "create-context")
+@ConditionalOnProperty(prefix = "embedded.postgres", name = "database-name")
 @EnableConfigurationProperties(PostgresProperties.class)
 public class PostgresAutoConfiguration {
+
+    private final Logger log = Logger.getLogger("PostgresAutoConfiguration");
 
     @Autowired
     private PostgresProperties properties;
@@ -30,8 +33,10 @@ public class PostgresAutoConfiguration {
     public EmbeddedPostgres embeddedPostgres() throws IOException {
         EmbeddedPostgres embeddedPostgres = new EmbeddedPostgres(properties.getVersion());
 
-        embeddedPostgres.start(properties.getHost(), properties.getPort(), properties.getDatabaseName(),
+        String url = embeddedPostgres.start(properties.getHost(), properties.getPort(), properties.getDatabaseName(),
                 properties.getUsername(), properties.getPassword());
+
+        log.info("URL:" + url);
 
         return embeddedPostgres;
     }
