@@ -1,4 +1,22 @@
 **Spring Boot Starter - EmbeddedPostgres**
+**HOW TO ADD**
+*1. Add jitpack repository*
+```
+<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+```
+*2. Add dependecy*
+```
+	<dependency>
+	    <groupId>com.github.esempla</groupId>
+	    <artifactId>spring-boot-starter-embedded-postgres</artifactId>
+	    <version>v0.1</version>
+	</dependency>
+```
 
 Configuration Example:
 ```
