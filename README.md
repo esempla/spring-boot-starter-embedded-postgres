@@ -1,5 +1,6 @@
 **Spring Boot Starter - EmbeddedPostgres**
 **HOW TO ADD**
+
 *1. Add jitpack repository*
 ```
 <repositories>
