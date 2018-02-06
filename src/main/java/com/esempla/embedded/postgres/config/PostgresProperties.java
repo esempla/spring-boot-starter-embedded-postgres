@@ -10,10 +10,10 @@ import ru.yandex.qatools.embed.postgresql.distribution.Version;
 public class PostgresProperties {
 
     private String host = "localhost";
-    private String username = "postgres";
-    private String password = "postgres";
+    private String username = "user";
+    private String password = "user";
     private String databaseName;
-    private int port = 5432;
+    private int port = 5433;
     private Version.Main version = Version.Main.V9_6;
 
     public String getUsername() {

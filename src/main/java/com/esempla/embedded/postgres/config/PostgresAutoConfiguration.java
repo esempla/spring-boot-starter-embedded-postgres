@@ -6,39 +6,42 @@ package com.esempla.embedded.postgres.config;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @Configuration
 @ConditionalOnProperty(prefix = "embedded.postgres", name = "database-name")
 @EnableConfigurationProperties(PostgresProperties.class)
-@AutoConfigureBefore(DataSourceAutoConfiguration.class)
-//@AutoConfigureBefore(JpaRepositoriesAutoConfiguration.class)
 public class PostgresAutoConfiguration {
 
-    private final Logger log = Logger.getLogger("PostgresAutoConfiguration");
+    private final PostgresProperties properties;
 
     @Autowired
-    private PostgresProperties properties;
+    public PostgresAutoConfiguration(PostgresProperties properties) {
+        this.properties = properties;
+    }
 
-    @Bean
+    @Configuration
+    protected static class EmbeddedPostgresDependencyConfiguration extends DataSourceDependsOnBeanFactoryPostProcessor{
+        public EmbeddedPostgresDependencyConfiguration(){
+            super("embeddedPostgres");
+        }
+    }
+
+    @Bean(destroyMethod = "stop")
     @ConditionalOnMissingBean
     public EmbeddedPostgres embeddedPostgres() throws IOException {
         EmbeddedPostgres embeddedPostgres = new EmbeddedPostgres(properties.getVersion());
 
-        String url = embeddedPostgres.start(properties.getHost(), properties.getPort(), properties.getDatabaseName(),
+        embeddedPostgres.start(properties.getHost(), properties.getPort(), properties.getDatabaseName(),
                 properties.getUsername(), properties.getPassword());
 
-        log.info("URL:" + url);
 
         return embeddedPostgres;
     }
